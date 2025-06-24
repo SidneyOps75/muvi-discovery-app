@@ -54,6 +54,7 @@ type PageData struct {
 	Error           string
 	IsInWatchlist   bool
 	WatchlistCount  int
+	Videos          *models.VideosResponse
 }
 
 func (h *Handler) renderTemplate(w http.ResponseWriter, r *http.Request, name string, data PageData) {
@@ -186,6 +187,18 @@ func (h *Handler) MovieDetails(w http.ResponseWriter, r *http.Request) {
 		data.Credits = credits
 	}
 
+	// Get videos (trailers, teasers, etc.)
+	videos, err := h.tmdbService.GetMovieVideos(id)
+	if err != nil {
+		log.Printf("Error fetching movie videos: %v", err)
+	} else {
+		log.Printf("Successfully fetched %d videos for movie %d", len(videos.Results), id)
+		for i, video := range videos.Results {
+			log.Printf("Video %d: Type=%s, Site=%s, Key=%s, Name=%s", i, video.Type, video.Site, video.Key, video.Name)
+		}
+		data.Videos = videos
+	}
+
 	// Get OMDB data if IMDB ID is available
 	if movieDetails.IMDBId != "" {
 		omdbData, err := h.omdbService.GetMovieByIMDBID(movieDetails.IMDBId)
@@ -268,6 +281,18 @@ func (h *Handler) TVShowDetails(w http.ResponseWriter, r *http.Request) {
 
 	// Check if in watchlist
 	data.IsInWatchlist = h.watchlistService.IsInWatchlist("tv", id)
+
+	// Get videos (trailers, teasers, etc.)
+	videos, err := h.tmdbService.GetTVShowVideos(id)
+	if err != nil {
+		log.Printf("Error fetching TV show videos: %v", err)
+	} else {
+		log.Printf("Successfully fetched %d videos for TV show %d", len(videos.Results), id)
+		for i, video := range videos.Results {
+			log.Printf("Video %d: Type=%s, Site=%s, Key=%s, Name=%s", i, video.Type, video.Site, video.Key, video.Name)
+		}
+		data.Videos = videos
+	}
 
 	// Get OMDB data if IMDB ID is available
 	if tvDetails.ExternalIDs.IMDBID != "" {
@@ -419,6 +444,46 @@ func (h *Handler) APIWatchlistAdd(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{"status": "success"})
+}
+
+func (h *Handler) APIMovieVideos(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	idStr := vars["id"]
+
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		http.Error(w, "Invalid movie ID", http.StatusBadRequest)
+		return
+	}
+
+	videos, err := h.tmdbService.GetMovieVideos(id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(videos)
+}
+
+func (h *Handler) APITVShowVideos(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	idStr := vars["id"]
+
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		http.Error(w, "Invalid TV show ID", http.StatusBadRequest)
+		return
+	}
+
+	videos, err := h.tmdbService.GetTVShowVideos(id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(videos)
 }
 
 func (h *Handler) APIWatchlistRemove(w http.ResponseWriter, r *http.Request) {

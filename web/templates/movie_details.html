@@ -33,16 +33,29 @@
                 </div>
                 {{end}}
                 
-                <div class="watchlist-actions">
-                    {{if .IsInWatchlist}}
-                        <button class="btn btn-secondary" onclick="removeFromWatchlist({{.MovieDetails.ID}}, 'movie', this)">
-                            Remove from Watchlist
-                        </button>
-                    {{else}}
-                        <button class="btn btn-primary" onclick="addToWatchlist({{.MovieDetails.ID}}, 'movie', '{{.MovieDetails.Title}}', '{{.MovieDetails.PosterPath}}', '{{.MovieDetails.ReleaseDate}}', {{.MovieDetails.VoteAverage}}, this)">
-                            Add to Watchlist
-                        </button>
+                <div class="action-buttons">
+                    {{if .Videos}}
+                        {{range .Videos.Results}}
+                            {{if and (eq .Site "YouTube") (or (eq .Type "Trailer") (eq .Type "Teaser"))}}
+                                <button class="btn btn-accent" onclick="openTrailerModal('{{.Key}}', '{{.Name}}')">
+                                    🎬 Watch Trailer
+                                </button>
+                                {{break}}
+                            {{end}}
+                        {{end}}
                     {{end}}
+                    
+                    <div class="watchlist-actions">
+                        {{if .IsInWatchlist}}
+                            <button class="btn btn-secondary" onclick="removeFromWatchlist({{.MovieDetails.ID}}, 'movie', this)">
+                                Remove from Watchlist
+                            </button>
+                        {{else}}
+                            <button class="btn btn-primary" onclick="addToWatchlist({{.MovieDetails.ID}}, 'movie', '{{.MovieDetails.Title}}', '{{.MovieDetails.PosterPath}}', '{{.MovieDetails.ReleaseDate}}', {{.MovieDetails.VoteAverage}}, this)">
+                                Add to Watchlist
+                            </button>
+                        {{end}}
+                    </div>
                 </div>
             </div>
         </div>
@@ -115,4 +128,5 @@
     <p>{{if .Error}}{{.Error}}{{else}}Movie not found{{end}}</p>
 </div>
 {{end}}
+
 {{end}}

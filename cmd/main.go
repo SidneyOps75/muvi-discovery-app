@@ -61,6 +61,8 @@ func main() {
 	api.HandleFunc("/watchlist", h.APIWatchlistAdd).Methods("POST")
 	api.HandleFunc("/watchlist/{id}", h.APIWatchlistRemove).Methods("DELETE")
 	api.HandleFunc("/watchlist/{id}/toggle", h.APIWatchlistToggle).Methods("PUT")
+	api.HandleFunc("/movies/{id}/videos", h.APIMovieVideos).Methods("GET")
+	api.HandleFunc("/tv/{id}/videos", h.APITVShowVideos).Methods("GET")
 
 	port := os.Getenv("PORT")
 	if port == "" {

@@ -1,5 +1,76 @@
 // Main JavaScript functionality for Muvi Discovery App
 
+// Trailer functionality
+function openTrailerModal(videoKey, videoTitle) {
+    console.log('Opening trailer modal with key:', videoKey, 'title:', videoTitle);
+    
+    const modal = document.getElementById('trailerModal');
+    const iframe = document.getElementById('trailerFrame');
+    const title = document.getElementById('trailerTitle');
+    
+    console.log('Modal elements found:', {
+        modal: !!modal,
+        iframe: !!iframe,
+        title: !!title
+    });
+    
+    if (modal && iframe && title) {
+        // Set the YouTube embed URL
+        const embedUrl = `https://www.youtube.com/embed/${videoKey}?autoplay=1&rel=0`;
+        console.log('Setting iframe src to:', embedUrl);
+        
+        iframe.src = embedUrl;
+        title.textContent = videoTitle || 'Trailer';
+        
+        // Show the modal
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        
+        // Close modal when clicking outside
+        modal.onclick = function(event) {
+            if (event.target === modal) {
+                closeTrailerModal();
+            }
+        };
+        
+        // Close modal with Escape key
+        document.addEventListener('keydown', handleTrailerEscape);
+        
+        console.log('Trailer modal opened successfully');
+    } else {
+        console.error('Could not find required modal elements');
+    }
+}
+
+function closeTrailerModal() {
+    console.log('Closing trailer modal');
+    
+    const modal = document.getElementById('trailerModal');
+    const iframe = document.getElementById('trailerFrame');
+    
+    if (modal && iframe) {
+        // Hide the modal
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto'; // Restore scrolling
+        
+        // Stop the video by clearing the src
+        iframe.src = '';
+        
+        // Remove escape key listener
+        document.removeEventListener('keydown', handleTrailerEscape);
+        
+        console.log('Trailer modal closed successfully');
+    } else {
+        console.error('Could not find modal elements to close');
+    }
+}
+
+function handleTrailerEscape(event) {
+    if (event.key === 'Escape') {
+        closeTrailerModal();
+    }
+}
+
 // Watchlist functionality
 function addToWatchlist(id, type, title, posterPath, releaseDate, voteAverage, buttonElement) {
     const item = {

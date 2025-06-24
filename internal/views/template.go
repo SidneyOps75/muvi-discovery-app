@@ -5,6 +5,7 @@ import (
 	"io/fs"
 	"log"
 	"net/http"
+	"reflect"
 	"text/template"
 )
 
@@ -48,8 +49,24 @@ func ParseFS(fs fs.FS, patterns ...string) (Template, error) {
 			return result
 		},
 		"slice": func(items interface{}, start, end int) interface{} {
-			// This is a simplified slice function for templates
-			return items
+			// Use reflection to handle any slice type
+			v := reflect.ValueOf(items)
+			if v.Kind() != reflect.Slice {
+				return items
+			}
+			
+			length := v.Len()
+			if start >= length {
+				return reflect.MakeSlice(v.Type(), 0, 0).Interface()
+			}
+			if end > length {
+				end = length
+			}
+			if start < 0 {
+				start = 0
+			}
+			
+			return v.Slice(start, end).Interface()
 		},
 	}
 
