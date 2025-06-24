@@ -218,3 +218,23 @@ type CrewMember struct {
 	Department         string  `json:"department"`
 	Job                string  `json:"job"`
 }
+
+// Video represents a video (trailer, teaser, etc.) from TMDB
+type Video struct {
+	ID           string `json:"id"`
+	ISO6391      string `json:"iso_639_1"`
+	ISO31661     string `json:"iso_3166_1"`
+	Key          string `json:"key"`
+	Name         string `json:"name"`
+	Site         string `json:"site"`
+	Size         int    `json:"size"`
+	Type         string `json:"type"`
+	Official     bool   `json:"official"`
+	PublishedAt  string `json:"published_at"`
+}
+
+// VideosResponse represents the response from TMDB videos endpoint
+type VideosResponse struct {
+	ID      int     `json:"id"`
+	Results []Video `json:"results"`
+}
