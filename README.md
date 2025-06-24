@@ -1,8 +1,12 @@
 # Muvi Discovery App
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Go Version](https://img.shields.io/badge/Go-1.19+-blue.svg)](https://golang.org)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
+
 A comprehensive entertainment discovery platform built with Go, HTML, and CSS. Discover movies and TV shows, manage your watchlist, and explore trending content with data from TMDB and OMDB APIs.
 
-## 🚀 Features
+##  Features
 
 ### Core Features
 - **Search & Discovery**: Real-time search for movies and TV shows
@@ -22,7 +26,7 @@ A comprehensive entertainment discovery platform built with Go, HTML, and CSS. D
 - **Rate Limiting**: Built-in rate limiting for API calls
 - **Responsive UI**: Mobile-first responsive design
 
-## 🛠 Tech Stack
+##  Tech Stack
 
 ### Backend
 - **Go 1.19+** - Main programming language
@@ -39,7 +43,7 @@ A comprehensive entertainment discovery platform built with Go, HTML, and CSS. D
 - **TMDB API** - Movie/TV data, images, and trending content
 - **OMDB API** - Additional ratings and plot information
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 muvi-discovery-app/
@@ -82,7 +86,7 @@ muvi-discovery-app/
 └── README.md                 # This file
 ```
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 - Go 1.19 or higher
@@ -93,7 +97,7 @@ muvi-discovery-app/
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/SidneyOps75/muvi-discovery-app.git
    cd muvi-discovery-app
    ```
 
@@ -125,7 +129,7 @@ muvi-discovery-app/
    ```
 
 6. **Open your browser**
-   Navigate to `http://localhost:8080`
+   Navigate to `http://localhost:3000`
 
 ### Getting API Keys
 
@@ -172,7 +176,7 @@ muvi-discovery-app/
 - Filter by genre, year, rating, and more
 - Sort results by popularity, rating, or release date
 
-## 🔧 Development
+##  Development
 
 ### Building for Production
 ```bash
@@ -208,7 +212,7 @@ PORT=3000 go run cmd/main.go
 4. **Update CSS** in `web/static/css/style.css`
 5. **Add JavaScript** in `web/static/js/main.js`
 
-## 🚀 Deployment
+##  Deployment
 
 ### Docker Deployment
 Create a `Dockerfile`:
@@ -248,7 +252,9 @@ OMDB_API_KEY=your_production_omdb_key
 PORT=8080
 ```
 
-## 🤝 Contributing
+##  Contributing
+
+We welcome contributions to the Muvi Discovery App! By contributing, you agree that your contributions will be licensed under the same MIT License that covers the project.
 
 ### Development Workflow
 1. Fork the repository
@@ -265,12 +271,15 @@ PORT=8080
 - Write clear, descriptive comments
 - Keep functions focused and small
 
-### Testing
-```bash
-go test ./...
-```
 
-## 📊 Performance
+### Contribution Guidelines
+- Ensure your code follows the existing style and patterns
+- Add tests for new functionality
+- Update documentation as needed
+- Be respectful and constructive in discussions
+- All contributions must be your own work or properly attributed
+
+##  Performance
 
 ### Optimizations
 - **Efficient API Calls**: Built-in rate limiting and caching
@@ -283,18 +292,36 @@ go test ./...
 - Error handling with user-friendly messages
 - Performance metrics in browser console
 
-## 🔒 Security
+##  Security
 
 - **Environment Variables**: Secure API key management
 - **Input Validation**: Server-side validation for all inputs
 - **Error Handling**: Graceful error handling without exposing internals
 - **HTTPS Ready**: Designed to work with HTTPS in production
 
-## 📄 License
+##  License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+### What does this mean?
+
+The MIT License is a permissive license that allows you to:
+
+- ✅ **Use** the software for any purpose
+- ✅ **Copy** and distribute the software
+- ✅ **Modify** the software
+- ✅ **Merge** it with other projects
+- ✅ **Publish** and distribute modified versions
+- ✅ **Sublicense** the software
+- ✅ **Sell** copies of the software
+
+**Requirements:**
+- Include the original copyright notice and license text in any copy of the software
+- The software is provided "as is" without warranty
+
+For more information about the MIT License, visit [choosealicense.com/licenses/mit](https://choosealicense.com/licenses/mit/).
+
+##  Acknowledgments
 
 - **TMDB**: For providing comprehensive movie and TV data
 - **OMDB**: For additional ratings and plot information
