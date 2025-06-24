@@ -140,6 +140,23 @@ func (s *TMDBService) GetMovieCredits(movieID int) (*models.Credits, error) {
 	return &result, nil
 }
 
+func (s *TMDBService) GetMovieVideos(movieID int) (*models.VideosResponse, error) {
+	endpoint := fmt.Sprintf("/movie/%d/videos", movieID)
+
+	resp, err := s.makeRequest(endpoint, nil)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	var result models.VideosResponse
+	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		return nil, fmt.Errorf("failed to decode response: %w", err)
+	}
+
+	return &result, nil
+}
+
 // TV Shows
 func (s *TMDBService) GetPopularTVShows(page int) (*models.TMDBResponse[models.TVShow], error) {
 	params := url.Values{}
@@ -189,6 +206,23 @@ func (s *TMDBService) GetTVShowDetails(tvID int) (*models.TVShowDetails, error) 
 	defer resp.Body.Close()
 
 	var result models.TVShowDetails
+	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		return nil, fmt.Errorf("failed to decode response: %w", err)
+	}
+
+	return &result, nil
+}
+
+func (s *TMDBService) GetTVShowVideos(tvID int) (*models.VideosResponse, error) {
+	endpoint := fmt.Sprintf("/tv/%d/videos", tvID)
+
+	resp, err := s.makeRequest(endpoint, nil)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	var result models.VideosResponse
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		return nil, fmt.Errorf("failed to decode response: %w", err)
 	}
