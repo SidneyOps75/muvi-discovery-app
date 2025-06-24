@@ -1,0 +1,118 @@
+{{template "base.html" .}}
+
+{{define "movie-details-content"}}
+{{if .MovieDetails}}
+<div class="details-hero" style="background-image: url('https://image.tmdb.org/t/p/w1280{{.MovieDetails.BackdropPath}}');">
+    <div class="details-overlay">
+        <div class="details-content">
+            <div class="details-poster">
+                <img src="https://image.tmdb.org/t/p/w500{{.MovieDetails.PosterPath}}" 
+                     alt="{{.MovieDetails.Title}}" 
+                     onerror="this.src='/static/images/placeholder.jpg'">
+            </div>
+            
+            <div class="details-info">
+                <h1>{{.MovieDetails.Title}}</h1>
+                {{if .MovieDetails.Tagline}}
+                    <p class="tagline">{{.MovieDetails.Tagline}}</p>
+                {{end}}
+                
+                <div class="details-meta">
+                    <span class="rating">⭐ {{printf "%.1f" .MovieDetails.VoteAverage}}</span>
+                    <span class="year">{{.MovieDetails.ReleaseDate}}</span>
+                    {{if .MovieDetails.Runtime}}
+                        <span class="runtime">{{.MovieDetails.Runtime}} min</span>
+                    {{end}}
+                </div>
+                
+                {{if .MovieDetails.Genres}}
+                <div class="genres">
+                    {{range .MovieDetails.Genres}}
+                        <span class="genre-tag">{{.Name}}</span>
+                    {{end}}
+                </div>
+                {{end}}
+                
+                <div class="watchlist-actions">
+                    {{if .IsInWatchlist}}
+                        <button class="btn btn-secondary" onclick="removeFromWatchlist({{.MovieDetails.ID}}, 'movie', this)">
+                            Remove from Watchlist
+                        </button>
+                    {{else}}
+                        <button class="btn btn-primary" onclick="addToWatchlist({{.MovieDetails.ID}}, 'movie', '{{.MovieDetails.Title}}', '{{.MovieDetails.PosterPath}}', '{{.MovieDetails.ReleaseDate}}', {{.MovieDetails.VoteAverage}}, this)">
+                            Add to Watchlist
+                        </button>
+                    {{end}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="details-sections">
+    <section class="overview-section">
+        <h2>Overview</h2>
+        <p>{{.MovieDetails.Overview}}</p>
+    </section>
+    
+    {{if .OMDBData}}
+    <section class="ratings-section">
+        <h2>Ratings</h2>
+        <div class="ratings-grid">
+            {{if .OMDBData.IMDBRating}}
+                <div class="rating-item">
+                    <span class="rating-source">IMDB</span>
+                    <span class="rating-value">{{.OMDBData.IMDBRating}}/10</span>
+                </div>
+            {{end}}
+            {{range .OMDBData.Ratings}}
+                <div class="rating-item">
+                    <span class="rating-source">{{.Source}}</span>
+                    <span class="rating-value">{{.Value}}</span>
+                </div>
+            {{end}}
+        </div>
+    </section>
+    {{end}}
+    
+    {{if .Credits}}
+    <section class="cast-section">
+        <h2>Cast</h2>
+        <div class="cast-grid">
+            {{range slice .Credits.Cast 0 10}}
+            <div class="cast-member">
+                {{if .ProfilePath}}
+                    <img src="https://image.tmdb.org/t/p/w185{{.ProfilePath}}" 
+                         alt="{{.Name}}" 
+                         onerror="this.src='/static/images/placeholder.jpg'">
+                {{else}}
+                    <div class="no-image">No Image</div>
+                {{end}}
+                <div class="cast-info">
+                    <h4>{{.Name}}</h4>
+                    <p>{{.Character}}</p>
+                </div>
+            </div>
+            {{end}}
+        </div>
+    </section>
+    {{end}}
+    
+    {{if .MovieDetails.ProductionCompanies}}
+    <section class="production-section">
+        <h2>Production</h2>
+        <div class="production-info">
+            {{range .MovieDetails.ProductionCompanies}}
+                <span class="production-company">{{.Name}}</span>
+            {{end}}
+        </div>
+    </section>
+    {{end}}
+</div>
+
+{{else}}
+<div class="error-message">
+    <p>{{if .Error}}{{.Error}}{{else}}Movie not found{{end}}</p>
+</div>
+{{end}}
+{{end}}

@@ -1,0 +1,139 @@
+{{define "home.html"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="/">Muvi Discovery</a>
+            </div>
+
+            <div class="nav-menu">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/movies" class="nav-link">Movies</a>
+                <a href="/tv" class="nav-link">TV Shows</a>
+                <a href="/search" class="nav-link">Search</a>
+                <a href="/discover" class="nav-link">Discover</a>
+                <a href="/watchlist" class="nav-link">
+                    Watchlist
+                    {{if gt .WatchlistCount 0}}
+                        <span class="badge">{{.WatchlistCount}}</span>
+                    {{end}}
+                </a>
+            </div>
+
+            <div class="nav-search">
+                <form action="/search" method="GET" class="search-form">
+                    <input type="text" name="q" placeholder="Search movies and TV shows..."
+                           value="{{.SearchQuery}}" class="search-input">
+                    <button type="submit" class="search-btn">Search</button>
+                </form>
+            </div>
+
+            <div class="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+<div class="hero-section">
+    <div class="hero-content">
+        <h1>Welcome to Muvi Discovery</h1>
+        <p>Discover amazing movies and TV shows, manage your watchlist, and never miss out on great entertainment.</p>
+    </div>
+</div>
+
+{{if .Error}}
+<div class="error-message">
+    <p>{{.Error}}</p>
+</div>
+{{end}}
+
+{{if .Movies}}
+<section class="content-section">
+    <div class="section-header">
+        <h2>Trending Movies</h2>
+        <a href="/movies" class="view-all-link">View All →</a>
+    </div>
+    
+    <div class="media-grid">
+        {{range .Movies}}
+        <div class="media-card">
+            <a href="/movies/{{.ID}}" class="media-link">
+                <div class="media-poster">
+                    <img src="https://image.tmdb.org/t/p/w500{{.PosterPath}}" 
+                         alt="{{.Title}}" 
+                         onerror="this.src='/static/images/placeholder.jpg'">
+                    <div class="media-rating">
+                        ⭐ {{printf "%.1f" .VoteAverage}}
+                    </div>
+                </div>
+                <div class="media-info">
+                    <h3>{{.Title}}</h3>
+                    <p class="media-year">{{.ReleaseDate}}</p>
+                </div>
+            </a>
+        </div>
+        {{end}}
+    </div>
+</section>
+{{end}}
+
+{{if .TVShows}}
+<section class="content-section">
+    <div class="section-header">
+        <h2>Trending TV Shows</h2>
+        <a href="/tv" class="view-all-link">View All →</a>
+    </div>
+    
+    <div class="media-grid">
+        {{range .TVShows}}
+        <div class="media-card">
+            <a href="/tv/{{.ID}}" class="media-link">
+                <div class="media-poster">
+                    <img src="https://image.tmdb.org/t/p/w500{{.PosterPath}}" 
+                         alt="{{.Name}}" 
+                         onerror="this.src='/static/images/placeholder.jpg'">
+                    <div class="media-rating">
+                        ⭐ {{printf "%.1f" .VoteAverage}}
+                    </div>
+                </div>
+                <div class="media-info">
+                    <h3>{{.Name}}</h3>
+                    <p class="media-year">{{.FirstAirDate}}</p>
+                </div>
+            </a>
+        </div>
+        {{end}}
+    </div>
+</section>
+{{end}}
+
+<section class="quick-actions">
+    <h2>Quick Actions</h2>
+    <div class="actions-grid">
+        <a href="/search" class="action-card">
+            <h3>Search</h3>
+            <p>Find your favorite movies and shows</p>
+        </a>
+        <a href="/discover" class="action-card">
+            <h3>Discover</h3>
+            <p>Explore content by genre and filters</p>
+        </a>
+        <a href="/watchlist" class="action-card">
+            <h3>Watchlist</h3>
+            <p>Manage your saved content</p>
+        </a>
+    </div>
+</section>
+{{end}}

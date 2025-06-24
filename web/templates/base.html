@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="/">Muvi Discovery</a>
+            </div>
+            
+            <div class="nav-menu">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/movies" class="nav-link">Movies</a>
+                <a href="/tv" class="nav-link">TV Shows</a>
+                <a href="/search" class="nav-link">Search</a>
+                <a href="/discover" class="nav-link">Discover</a>
+                <a href="/watchlist" class="nav-link">
+                    Watchlist
+                    {{if gt .WatchlistCount 0}}
+                        <span class="badge">{{.WatchlistCount}}</span>
+                    {{end}}
+                </a>
+            </div>
+
+            <div class="nav-search">
+                <form action="/search" method="GET" class="search-form">
+                    <input type="text" name="q" placeholder="Search movies and TV shows..." 
+                           value="{{.SearchQuery}}" class="search-input">
+                    <button type="submit" class="search-btn">Search</button>
+                </form>
+            </div>
+
+            <div class="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        {{if eq .ContentTemplate "movies-content"}}
+            {{template "movies-content" .}}
+        {{else if eq .ContentTemplate "watchlist-content"}}
+            {{template "watchlist-content" .}}
+        {{else if eq .ContentTemplate "search-content"}}
+            {{template "search-content" .}}
+        {{else if eq .ContentTemplate "tv-shows-content"}}
+            {{template "tv-shows-content" .}}
+        {{else if eq .ContentTemplate "discover-content"}}
+            {{template "discover-content" .}}
+        {{else if eq .ContentTemplate "movie-details-content"}}
+            {{template "movie-details-content" .}}
+        {{else if eq .ContentTemplate "tv-details-content"}}
+            {{template "tv-details-content" .}}
+        {{else}}
+            {{template "content" .}}
+        {{end}}
+    </main>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <p>&copy; 2024 Muvi Discovery. Powered by TMDB & OMDB APIs.</p>
+        </div>
+    </footer>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

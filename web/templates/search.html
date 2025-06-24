@@ -1,0 +1,113 @@
+{{template "base.html" .}}
+
+{{define "search-content"}}
+<div class="page-header">
+    <h1>Search</h1>
+    
+    <div class="search-container">
+        <form action="/search" method="GET" class="search-form-large">
+            <input type="text" name="q" placeholder="Search movies and TV shows..." 
+                   value="{{.SearchQuery}}" class="search-input-large">
+            <select name="type" class="search-type">
+                <option value="movie">Movies</option>
+                <option value="tv">TV Shows</option>
+            </select>
+            <button type="submit" class="search-btn-large">Search</button>
+        </form>
+    </div>
+</div>
+
+{{if .SearchQuery}}
+    {{if .Error}}
+    <div class="error-message">
+        <p>{{.Error}}</p>
+    </div>
+    {{end}}
+
+    {{if .Movies}}
+    <div class="search-results">
+        <h2>Movies - "{{.SearchQuery}}"</h2>
+        <div class="media-grid">
+            {{range .Movies}}
+            <div class="media-card">
+                <a href="/movies/{{.ID}}" class="media-link">
+                    <div class="media-poster">
+                        <img src="https://image.tmdb.org/t/p/w500{{.PosterPath}}" 
+                             alt="{{.Title}}" 
+                             onerror="this.src='/static/images/placeholder.jpg'">
+                        <div class="media-rating">
+                            ⭐ {{printf "%.1f" .VoteAverage}}
+                        </div>
+                    </div>
+                    <div class="media-info">
+                        <h3>{{.Title}}</h3>
+                        <p class="media-year">{{.ReleaseDate}}</p>
+                        <p class="media-overview">{{.Overview}}</p>
+                    </div>
+                </a>
+            </div>
+            {{end}}
+        </div>
+    </div>
+    {{end}}
+
+    {{if .TVShows}}
+    <div class="search-results">
+        <h2>TV Shows - "{{.SearchQuery}}"</h2>
+        <div class="media-grid">
+            {{range .TVShows}}
+            <div class="media-card">
+                <a href="/tv/{{.ID}}" class="media-link">
+                    <div class="media-poster">
+                        <img src="https://image.tmdb.org/t/p/w500{{.PosterPath}}" 
+                             alt="{{.Name}}" 
+                             onerror="this.src='/static/images/placeholder.jpg'">
+                        <div class="media-rating">
+                            ⭐ {{printf "%.1f" .VoteAverage}}
+                        </div>
+                    </div>
+                    <div class="media-info">
+                        <h3>{{.Name}}</h3>
+                        <p class="media-year">{{.FirstAirDate}}</p>
+                        <p class="media-overview">{{.Overview}}</p>
+                    </div>
+                </a>
+            </div>
+            {{end}}
+        </div>
+    </div>
+    {{end}}
+
+    {{if and (not .Movies) (not .TVShows) (not .Error)}}
+    <div class="no-results">
+        <p>No results found for "{{.SearchQuery}}"</p>
+    </div>
+    {{end}}
+
+    {{if gt .TotalPages 1}}
+    <div class="pagination">
+        {{if gt .CurrentPage 1}}
+            <a href="?q={{.SearchQuery}}&page={{sub .CurrentPage 1}}" class="pagination-btn">← Previous</a>
+        {{end}}
+        
+        <span class="pagination-info">Page {{.CurrentPage}} of {{.TotalPages}}</span>
+        
+        {{if lt .CurrentPage .TotalPages}}
+            <a href="?q={{.SearchQuery}}&page={{add .CurrentPage 1}}" class="pagination-btn">Next →</a>
+        {{end}}
+    </div>
+    {{end}}
+{{else}}
+<div class="search-suggestions">
+    <h2>Popular Searches</h2>
+    <div class="suggestions-grid">
+        <a href="/search?q=marvel" class="suggestion-tag">Marvel</a>
+        <a href="/search?q=action" class="suggestion-tag">Action</a>
+        <a href="/search?q=comedy" class="suggestion-tag">Comedy</a>
+        <a href="/search?q=drama" class="suggestion-tag">Drama</a>
+        <a href="/search?q=horror" class="suggestion-tag">Horror</a>
+        <a href="/search?q=sci-fi" class="suggestion-tag">Sci-Fi</a>
+    </div>
+</div>
+{{end}}
+{{end}}

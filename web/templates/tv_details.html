@@ -1,0 +1,83 @@
+{{template "base.html" .}}
+
+{{define "tv-details-content"}}
+{{if .TVShowDetails}}
+<div class="details-hero" style="background-image: url('https://image.tmdb.org/t/p/w1280{{.TVShowDetails.BackdropPath}}');">
+    <div class="details-overlay">
+        <div class="details-content">
+            <div class="details-poster">
+                <img src="https://image.tmdb.org/t/p/w500{{.TVShowDetails.PosterPath}}" 
+                     alt="{{.TVShowDetails.Name}}" 
+                     onerror="this.src='/static/images/placeholder.jpg'">
+            </div>
+            
+            <div class="details-info">
+                <h1>{{.TVShowDetails.Name}}</h1>
+                {{if .TVShowDetails.Tagline}}
+                    <p class="tagline">{{.TVShowDetails.Tagline}}</p>
+                {{end}}
+                
+                <div class="details-meta">
+                    <span class="rating">⭐ {{printf "%.1f" .TVShowDetails.VoteAverage}}</span>
+                    <span class="year">{{.TVShowDetails.FirstAirDate}}</span>
+                    <span class="seasons">{{.TVShowDetails.NumberOfSeasons}} seasons</span>
+                    <span class="episodes">{{.TVShowDetails.NumberOfEpisodes}} episodes</span>
+                </div>
+                
+                {{if .TVShowDetails.Genres}}
+                <div class="genres">
+                    {{range .TVShowDetails.Genres}}
+                        <span class="genre-tag">{{.Name}}</span>
+                    {{end}}
+                </div>
+                {{end}}
+                
+                <div class="watchlist-actions">
+                    {{if .IsInWatchlist}}
+                        <button class="btn btn-secondary" onclick="removeFromWatchlist({{.TVShowDetails.ID}}, 'tv', this)">
+                            Remove from Watchlist
+                        </button>
+                    {{else}}
+                        <button class="btn btn-primary" onclick="addToWatchlist({{.TVShowDetails.ID}}, 'tv', '{{.TVShowDetails.Name}}', '{{.TVShowDetails.PosterPath}}', '{{.TVShowDetails.FirstAirDate}}', {{.TVShowDetails.VoteAverage}}, this)">
+                            Add to Watchlist
+                        </button>
+                    {{end}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="details-sections">
+    <section class="overview-section">
+        <h2>Overview</h2>
+        <p>{{.TVShowDetails.Overview}}</p>
+    </section>
+    
+    <section class="show-info">
+        <h2>Show Information</h2>
+        <div class="info-grid">
+            <div class="info-item">
+                <span class="info-label">Status:</span>
+                <span class="info-value">{{.TVShowDetails.Status}}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">First Air Date:</span>
+                <span class="info-value">{{.TVShowDetails.FirstAirDate}}</span>
+            </div>
+            {{if .TVShowDetails.LastAirDate}}
+            <div class="info-item">
+                <span class="info-label">Last Air Date:</span>
+                <span class="info-value">{{.TVShowDetails.LastAirDate}}</span>
+            </div>
+            {{end}}
+        </div>
+    </section>
+</div>
+
+{{else}}
+<div class="error-message">
+    <p>{{if .Error}}{{.Error}}{{else}}TV show not found{{end}}</p>
+</div>
+{{end}}
+{{end}}

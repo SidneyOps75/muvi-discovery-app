@@ -1,0 +1,63 @@
+{{template "base.html" .}}
+
+{{define "watchlist-content"}}
+<div class="page-header">
+    <h1>My Watchlist</h1>
+    
+    <div class="watchlist-filters">
+        <a href="/watchlist" class="filter-btn">All</a>
+        <a href="/watchlist?filter=unwatched" class="filter-btn">To Watch</a>
+        <a href="/watchlist?filter=watched" class="filter-btn">Watched</a>
+    </div>
+</div>
+
+{{if .WatchlistItems}}
+<div class="watchlist-grid">
+    {{range .WatchlistItems}}
+    <div class="watchlist-item {{if .Watched}}watched{{end}}">
+        <a href="/{{.Type}}/{{.ID}}" class="media-link">
+            <div class="media-poster">
+                <img src="https://image.tmdb.org/t/p/w500{{.PosterPath}}" 
+                     alt="{{.Title}}" 
+                     onerror="this.src='/static/images/placeholder.jpg'">
+                <div class="media-rating">
+                    ⭐ {{printf "%.1f" .VoteAverage}}
+                </div>
+                {{if .Watched}}
+                    <div class="watched-badge">✓ Watched</div>
+                {{end}}
+            </div>
+            <div class="media-info">
+                <h3>{{.Title}}</h3>
+                <p class="media-year">{{.ReleaseDate}}</p>
+                <p class="media-type">{{if eq .Type "movie"}}Movie{{else}}TV Show{{end}}</p>
+                <p class="added-date">Added: {{.AddedAt.Format "Jan 2, 2006"}}</p>
+                {{if .WatchedAt}}
+                    <p class="watched-date">Watched: {{.WatchedAt.Format "Jan 2, 2006"}}</p>
+                {{end}}
+            </div>
+        </a>
+        
+        <div class="watchlist-actions">
+            <button class="btn btn-small" onclick="toggleWatched({{.ID}}, '{{.Type}}')">
+                {{if .Watched}}Mark as Unwatched{{else}}Mark as Watched{{end}}
+            </button>
+            <button class="btn btn-small btn-danger" onclick="removeFromWatchlist({{.ID}}, '{{.Type}}', this)">
+                Remove
+            </button>
+        </div>
+    </div>
+    {{end}}
+</div>
+{{else}}
+<div class="empty-watchlist">
+    <h2>Your watchlist is empty</h2>
+    <p>Start adding movies and TV shows to keep track of what you want to watch!</p>
+    <div class="empty-actions">
+        <a href="/movies" class="btn btn-primary">Browse Movies</a>
+        <a href="/tv" class="btn btn-primary">Browse TV Shows</a>
+        <a href="/search" class="btn btn-secondary">Search</a>
+    </div>
+</div>
+{{end}}
+{{end}}

@@ -1,0 +1,61 @@
+{{template "base.html" .}}
+
+{{define "movies-content"}}
+<div class="page-header">
+    <h1>Movies</h1>
+    
+    <div class="category-filters">
+        <a href="/movies?category=popular" class="filter-btn">Popular</a>
+        <a href="/movies?category=top_rated" class="filter-btn">Top Rated</a>
+        <a href="/movies?category=now_playing" class="filter-btn">Now Playing</a>
+    </div>
+</div>
+
+{{if .Error}}
+<div class="error-message">
+    <p>{{.Error}}</p>
+</div>
+{{end}}
+
+{{if .Movies}}
+<div class="media-grid">
+    {{range .Movies}}
+    <div class="media-card">
+        <a href="/movies/{{.ID}}" class="media-link">
+            <div class="media-poster">
+                <img src="https://image.tmdb.org/t/p/w500{{.PosterPath}}" 
+                     alt="{{.Title}}" 
+                     onerror="this.src='/static/images/placeholder.jpg'">
+                <div class="media-rating">
+                    ⭐ {{printf "%.1f" .VoteAverage}}
+                </div>
+            </div>
+            <div class="media-info">
+                <h3>{{.Title}}</h3>
+                <p class="media-year">{{.ReleaseDate}}</p>
+                <p class="media-overview">{{.Overview}}</p>
+            </div>
+        </a>
+    </div>
+    {{end}}
+</div>
+
+{{if gt .TotalPages 1}}
+<div class="pagination">
+    {{if gt .CurrentPage 1}}
+        <a href="?page={{sub .CurrentPage 1}}" class="pagination-btn">← Previous</a>
+    {{end}}
+    
+    <span class="pagination-info">Page {{.CurrentPage}} of {{.TotalPages}}</span>
+    
+    {{if lt .CurrentPage .TotalPages}}
+        <a href="?page={{add .CurrentPage 1}}" class="pagination-btn">Next →</a>
+    {{end}}
+</div>
+{{end}}
+{{else}}
+<div class="no-results">
+    <p>No movies found.</p>
+</div>
+{{end}}
+{{end}}

@@ -1,0 +1,140 @@
+{{template "base.html" .}}
+
+{{define "discover-content"}}
+<div class="page-header">
+    <h1>Discover</h1>
+    <p>Find movies and TV shows by genre, year, and rating</p>
+</div>
+
+<div class="discover-filters">
+    <form id="discoverForm" class="filters-form">
+        <div class="filter-group">
+            <label for="mediaType">Type:</label>
+            <select name="type" id="mediaType">
+                <option value="movie">Movies</option>
+                <option value="tv">TV Shows</option>
+            </select>
+        </div>
+
+        {{if .Genres}}
+        <div class="filter-group">
+            <label for="genre">Genre:</label>
+            <select name="genre" id="genre">
+                <option value="">All Genres</option>
+                {{range .Genres}}
+                    <option value="{{.ID}}">{{.Name}}</option>
+                {{end}}
+            </select>
+        </div>
+        {{end}}
+
+        <div class="filter-group">
+            <label for="year">Year:</label>
+            <select name="year" id="year">
+                <option value="">Any Year</option>
+                {{range $year := seq 2024 1990}}
+                    <option value="{{$year}}">{{$year}}</option>
+                {{end}}
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label for="rating">Minimum Rating:</label>
+            <select name="rating" id="rating">
+                <option value="">Any Rating</option>
+                <option value="7">7.0+</option>
+                <option value="8">8.0+</option>
+                <option value="9">9.0+</option>
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label for="sortBy">Sort By:</label>
+            <select name="sort_by" id="sortBy">
+                <option value="popularity">Popularity</option>
+                <option value="vote_average">Rating</option>
+                <option value="release_date">Release Date</option>
+                <option value="title">Title</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Discover</button>
+    </form>
+</div>
+
+<div id="discoverResults" class="discover-results">
+    <!-- Results will be loaded here via JavaScript -->
+</div>
+
+<script>
+document.getElementById('discoverForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const params = new URLSearchParams();
+    
+    for (let [key, value] of formData.entries()) {
+        if (value) {
+            params.append(key, value);
+        }
+    }
+    
+    // Add page parameter
+    params.append('page', '1');
+    
+    // Make API request based on type
+    const mediaType = formData.get('type');
+    const endpoint = mediaType === 'tv' ? '/api/discover/tv' : '/api/discover/movie';
+    
+    fetch(`${endpoint}?${params.toString()}`)
+        .then(response => response.json())
+        .then(data => {
+            displayResults(data, mediaType);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('discoverResults').innerHTML = '<div class="error-message"><p>Failed to load results</p></div>';
+        });
+});
+
+function displayResults(data, mediaType) {
+    const resultsContainer = document.getElementById('discoverResults');
+    
+    if (!data.results || data.results.length === 0) {
+        resultsContainer.innerHTML = '<div class="no-results"><p>No results found</p></div>';
+        return;
+    }
+    
+    let html = '<div class="media-grid">';
+    
+    data.results.forEach(item => {
+        const title = mediaType === 'tv' ? item.name : item.title;
+        const date = mediaType === 'tv' ? item.first_air_date : item.release_date;
+        const url = mediaType === 'tv' ? `/tv/${item.id}` : `/movies/${item.id}`;
+        
+        html += `
+            <div class="media-card">
+                <a href="${url}" class="media-link">
+                    <div class="media-poster">
+                        <img src="https://image.tmdb.org/t/p/w500${item.poster_path}" 
+                             alt="${title}" 
+                             onerror="this.src='/static/images/placeholder.jpg'">
+                        <div class="media-rating">
+                            ⭐ ${item.vote_average.toFixed(1)}
+                        </div>
+                    </div>
+                    <div class="media-info">
+                        <h3>${title}</h3>
+                        <p class="media-year">${date}</p>
+                        <p class="media-overview">${item.overview}</p>
+                    </div>
+                </a>
+            </div>
+        `;
+    });
+    
+    html += '</div>';
+    resultsContainer.innerHTML = html;
+}
+</script>
+{{end}}
