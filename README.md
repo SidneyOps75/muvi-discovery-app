@@ -148,7 +148,7 @@ muvi-discovery-app/
 4. Register and verify your email
 5. Copy your API key to the `.env` file
 
-## 📱 Usage
+##  Usage
 
 ### Navigation
 - **Home**: Trending movies and TV shows
@@ -230,14 +230,14 @@ WORKDIR /root/
 COPY --from=builder /app/main .
 COPY --from=builder /app/web ./web
 COPY --from=builder /app/.env .
-EXPOSE 8080
+EXPOSE 3000
 CMD ["./main"]
 ```
 
 Build and run:
 ```bash
 docker build -t muvi-discovery-app .
-docker run -p 8080:8080 muvi-discovery-app
+docker run -p 3000:3000 muvi-discovery-app
 ```
 
 ### Traditional Deployment
@@ -307,13 +307,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 The MIT License is a permissive license that allows you to:
 
-- ✅ **Use** the software for any purpose
-- ✅ **Copy** and distribute the software
-- ✅ **Modify** the software
-- ✅ **Merge** it with other projects
-- ✅ **Publish** and distribute modified versions
-- ✅ **Sublicense** the software
-- ✅ **Sell** copies of the software
+-  **Use** the software for any purpose
+-  **Copy** and distribute the software
+-  **Modify** the software
+-  **Merge** it with other projects
+-  **Publish** and distribute modified versions
+-  **Sublicense** the software
+-  **Sell** copies of the software
 
 **Requirements:**
 - Include the original copyright notice and license text in any copy of the software
@@ -339,4 +339,4 @@ If you encounter any issues or have questions:
 
 ---
 
-**Happy coding! 🎬✨**
+**Happy coding! **
